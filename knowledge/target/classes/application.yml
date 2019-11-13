@@ -1,0 +1,22 @@
+server:
+  port: 8085
+name: 杨高利
+age: 30
+content: 我是${name}今年${age}岁
+student:
+  name: 王五
+  age: 29
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/trade?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: root
+
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
