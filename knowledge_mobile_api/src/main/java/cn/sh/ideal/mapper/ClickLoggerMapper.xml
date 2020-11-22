@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sh.ideal.dao.ClickLoggerDao">
+	<!-- 热词点击量 -->
+	<resultMap type="cn.sh.ideal.entity.HotWordClick" id="HotWordClickMap">
+	    <result property="klId" column="T_HOTWORD_APP_CLICK_ID"  />
+	    <result property="hotWordId" column="THAC_HOTWORDID"  />
+	    <result property="typeLevel1" column="THAC_HOTWORD_TYPELEVEL1"  />
+	    <result property="typeLevel2" column="THAC_HOTWORD_TYPELEVEL2"  />
+	    <result property="hotSortId" column="THAC_LINK_SORT_ID"  />
+	    <result property="hotSortType" column="THAC_LINK_SORT_TYPE"  />
+	    <result property="infoId" column="THAC_INFO_ID"  />
+	    <result property="infoType" column="THAC_INFO_TYPE"  />
+	    <result property="clickType" column="THAC_CLICK_TYPE"  />
+	    <result property="clickLevel" column="THAC_CLICK_LEVEL"  />
+	    <result property="clickCreater" column="THAC_CLICK_CREATER"  />
+	    <result property="clickCreateTime" column="THAC_CLICK_TIME"  />
+  	</resultMap>
+  
+  	<!-- 新增 -->
+	<insert id="addHotWordClick" parameterType="cn.sh.ideal.entity.HotWordClick">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_HOTWORD_APP_CLICK.nextval from dual  
+    	</selectKey>
+		insert into T_HOTWORD_APP_CLICK(
+				T_HOTWORD_APP_CLICK_ID,
+				<if test="hotWordId != null and hotWordId != ''">THAC_HOTWORDID,</if>
+				<if test="typeLevel1 != null and typeLevel1 != ''">THAC_HOTWORD_TYPELEVEL1,</if>
+				<if test="typeLevel2 != null and typeLevel2 != ''">THAC_HOTWORD_TYPELEVEL2,</if>
+				<if test="hotSortId != null and hotSortId != ''">THAC_LINK_SORT_ID,</if>
+				<if test="hotSortType != null and hotSortType != ''">THAC_LINK_SORT_TYPE,</if>
+				<if test="infoId != null and infoId != ''">THAC_INFO_ID,</if>
+				<if test="infoType != null and infoType != ''">THAC_INFO_TYPE,</if>
+				<if test="questionAnswerId != null and questionAnswerId != ''">THAC_QUESTIONANSWER_ID,</if>
+				<if test="clickType != null and clickType != ''">THAC_CLICK_TYPE,</if>
+				<if test="clickLevel != null and clickLevel != ''">THAC_CLICK_LEVEL,</if>
+				<if test="clickCreater != null and clickCreater != ''">THAC_CLICK_CREATER,</if>
+				<if test="platform!= null and platform != ''">THAC_PLATFORM,</if>
+				THAC_CLICK_TIME) 
+					
+				values (#{klId},
+						<if test="hotWordId != null and hotWordId != ''">#{hotWordId},</if>
+						<if test="typeLevel1 != null and typeLevel1 != ''">#{typeLevel1},</if>
+						<if test="typeLevel2 != null and typeLevel2 != ''">#{typeLevel2},</if>
+						<if test="hotSortId != null and hotSortId != ''">#{hotSortId},</if>
+						<if test="hotSortType != null and hotSortType != ''">#{hotSortType},</if>
+						<if test="infoId != null and infoId != ''">#{infoId},</if>
+						<if test="infoType != null and infoType != ''">#{infoType},</if>
+						<if test="questionAnswerId != null and questionAnswerId != ''">#{questionAnswerId},</if>
+						<if test="clickType != null and clickType != ''">#{clickType},</if>
+						<if test="clickLevel != null and clickLevel != ''">#{clickLevel},</if>
+						<if test="clickCreater != null and clickCreater != ''">#{clickCreater},</if>
+						<if test="platform!= null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						sysdate
+						)
+	</insert>
+
+
+
+
+	<!-- 新政速递点击量 -->
+	
+	<resultMap type="cn.sh.ideal.entity.PolicyClick" id="PolicyClickMap">
+		<result column="T_POLICY_APP_CLICK_ID" jdbcType="VARCHAR" property="klId" />
+		<result column="TPAC_PAGEID" jdbcType="VARCHAR" property="pageId" />
+		<result column="TPAC_INFO_ID" jdbcType="VARCHAR" property="infoId" />
+		<result column="TPAC_INFO_TYPE" jdbcType="VARCHAR" property="infoType" />
+		<result column="TPAC_CLICK_TYPE" jdbcType="VARCHAR" property="clickType" />
+		<result column="TPAC_CLICK_CREATER" jdbcType="VARCHAR" property="clickCreater" />
+		<result column="TPAC_CLICK_TIME" jdbcType="TIMESTAMP" property="clickCreateTime" />
+	</resultMap>
+	
+	
+	<!-- 新增 -->
+	<insert id="addPolicyClick" parameterType="cn.sh.ideal.entity.PolicyClick">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_POLICY_APP_CLICK.nextval from dual  
+    	</selectKey>
+		insert into T_POLICY_APP_CLICK(
+				T_POLICY_APP_CLICK_ID,
+				<if test="pageId!= null and pageId != ''">TPAC_PAGEID,</if>
+				<if test="infoId!= null and infoId != ''">TPAC_INFO_ID,</if>
+				<if test="infoType!= null and infoType != ''">TPAC_INFO_TYPE,</if>
+				<if test="clickType!= null and clickType != ''">TPAC_CLICK_TYPE,</if>
+				<if test="clickCreater!= null and clickCreater != ''">TPAC_CLICK_CREATER,</if>
+				<if test="platform!= null and platform != ''">TPAC_PLATFORM,</if>
+				TPAC_CLICK_TIME) 
+							
+				values (#{klId},
+						<if test="pageId != null and pageId != ''">#{pageId,jdbcType=VARCHAR},</if>
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="clickType != null and clickType != ''">#{clickType,jdbcType=VARCHAR},</if>
+						<if test="clickCreater != null and clickCreater != ''">#{clickCreater,jdbcType=VARCHAR},</if>
+						<if test="platform!= null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						sysdate
+						)
+	</insert>
+	
+	
+	<!-- 热点专题点击量 -->
+	
+	<resultMap type="cn.sh.ideal.entity.FocusClick" id="FocusClickMap">
+		<result column="T_FOCUS_APP_CLICK_ID" jdbcType="VARCHAR" property="klId" />
+		<result column="TFAC_FOCUS_ID" jdbcType="VARCHAR" property="focusId" />
+		<result column="TFAC_SORT_ID" jdbcType="VARCHAR" property="sortId" />
+		<result column="TFAC_SORT_TYPE" jdbcType="VARCHAR" property="sortType" />
+		<result column="TFAC_INFO_ID" jdbcType="VARCHAR" property="infoId" />
+		<result column="TFAC_INFO_TYPE" jdbcType="VARCHAR" property="infoType" />
+		<result column="TFAC_CLICK_TYPE" jdbcType="VARCHAR" property="clickType" />
+		<result column="TFAC_CLICK_LEVEL" jdbcType="VARCHAR" property="clickLevel" />
+		<result column="TFAC_CLICK_CREATER" jdbcType="VARCHAR" property="clickCreater" />
+		<result column="TFAC_CLICK_TIME" jdbcType="TIMESTAMP" property="clickCreateTime" />
+	</resultMap>
+	
+	
+	<!-- 新增 -->
+	<insert id="addFocusClick" parameterType="cn.sh.ideal.entity.FocusClick">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_FOCUS_APP_CLICK.nextval from dual  
+    	</selectKey>
+		insert into T_FOCUS_APP_CLICK(
+				T_FOCUS_APP_CLICK_ID,
+				<if test="focusId!= null and focusId != ''">TFAC_FOCUS_ID,</if>
+				<if test="sortId!= null and sortId != ''">TFAC_SORT_ID,</if>
+				<if test="sortType!= null and sortType != ''">TFAC_SORT_TYPE,</if>
+				<if test="infoId!= null and infoId != ''">TFAC_INFO_ID,</if>
+				<if test="infoType!= null and infoType != ''">TFAC_INFO_TYPE,</if>
+				<if test="clickType!= null and clickType != ''">TFAC_CLICK_TYPE,</if>
+				<if test="clickLevel!= null and clickLevel != ''">TFAC_CLICK_LEVEL,</if>
+				<if test="clickCreater!= null and clickCreater != ''">TFAC_CLICK_CREATER,</if>
+				<if test="platform!= null and platform != ''">TFAC_PLATFORM,</if>
+				TFAC_CLICK_TIME) 			
+				values (#{klId},
+						<if test="focusId != null and focusId != ''">#{focusId,jdbcType=VARCHAR},</if>
+						<if test="sortId != null and sortId != ''">#{sortId,jdbcType=VARCHAR},</if>
+						<if test="sortType != null and sortType != ''">#{sortType,jdbcType=VARCHAR},</if>
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="clickType != null and clickType != ''">#{clickType,jdbcType=VARCHAR},</if>
+						<if test="clickLevel != null and clickLevel != ''">#{clickLevel,jdbcType=VARCHAR},</if>
+						<if test="clickCreater != null and clickCreater != ''">#{clickCreater,jdbcType=VARCHAR},</if>
+						<if test="platform!= null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						sysdate
+					)
+		</insert>
+		
+		
+		
+	<!-- 热点专题点击量
+	<resultMap type="cn.sh.ideal.entity.SearchClick" id="SearchClickMap">
+		<result column="T_SEARCH_APP_CLICK_ID" jdbcType="VARCHAR" property="klId" />
+		<result column="TSAC_PAGE_ID" jdbcType="VARCHAR" property="pageId" />
+		<result column="TSAC_INFO_ID" jdbcType="VARCHAR" property="infoId" />
+		<result column="TSAC_QUESTIONANSWER_ID" jdbcType="VARCHAR" property="qsInfoId" />
+		<result column="TSAC_INFO_TYPE" jdbcType="VARCHAR" property="infoType" />
+		<result column="TSAC_CLICK_TYPE" jdbcType="VARCHAR" property="clickType" />
+		<result column="TSAC_CLICK_CREATER" jdbcType="VARCHAR" property="clickCreater" />
+		<result column="TSAC_CLICK_TIME" jdbcType="TIMESTAMP" property="clickCreateTime" />
+		<result column="TSAC_PLATFORM" jdbcType="VARCHAR" property="platform" />
+	</resultMap>
+	 -->	
+	<!-- 新增 -->
+	<insert id="addSearchClick" parameterType="cn.sh.ideal.entity.SearchClick">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_SEARCH_APP_CLICK.nextval from dual  
+    	</selectKey>
+		insert into T_SEARCH_APP_CLICK(
+				T_SEARCH_APP_CLICK_ID,
+				<if test="pageId!= null and pageId != ''">TSAC_PAGE_ID,</if>
+				<if test="hotWordId!= null and hotWordId != ''">TSAC_HOTWORD_ID,</if>
+				<if test="infoId!= null and infoId != ''">TSAC_INFO_ID,</if>
+				<if test="qsInfoId!= null and qsInfoId != ''">TSAC_QUESTIONANSWER_ID,</if>
+				<if test="infoType!= null and infoType != ''">TSAC_INFO_TYPE,</if>
+				<if test="clickType!= null and clickType != ''">TSAC_CLICK_TYPE,</if>
+				<if test="clickCreater!= null and clickCreater != ''">TSAC_CLICK_CREATER,</if>
+				<if test="platform!= null and platform != ''">TSAC_PLATFORM,</if>
+				TSAC_CLICK_TIME) 			
+				values (#{klId},
+						<if test="pageId != null and pageId != ''">#{pageId,jdbcType=VARCHAR},</if>
+						<if test="hotWordId!= null and hotWordId != ''">#{hotWordId,jdbcType=VARCHAR},</if>
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="qsInfoId != null and qsInfoId != ''">#{qsInfoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="clickType != null and clickType != ''">#{clickType,jdbcType=VARCHAR},</if>
+						<if test="clickCreater != null and clickCreater != ''">#{clickCreater,jdbcType=VARCHAR},</if>
+						<if test="platform != null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						sysdate
+					)
+		</insert>		
+		
+	<insert id="addSearchKeywordRecord" parameterType="cn.sh.ideal.entity.KeywordRecord">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_SEARCH_KEYWORD_RECORD.nextval from dual  
+    	</selectKey>
+		insert into T_SEARCH_KEYWORD_RECORD(
+				T_SEARCH_KEYWORD_RECORD_ID,
+				<if test="keyword!= null and keyword != ''">TSKR_KEYWORD,</if>
+				<if test="clickCreater!= null and clickCreater != ''">TSKR_CLICK_CREATER,</if>
+				<if test="platform!= null and platform != ''">TSKR_PLATFORM,</if>
+				TSKR_CLICK_TIME) 			
+				values (#{klId},
+						<if test="keyword != null and keyword != ''">#{keyword,jdbcType=VARCHAR},</if>
+						<if test="clickCreater != null and clickCreater != ''">#{clickCreater,jdbcType=VARCHAR},</if>
+						<if test="platform != null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						sysdate
+					)
+		</insert>
+	
+</mapper>
+
+
+
+

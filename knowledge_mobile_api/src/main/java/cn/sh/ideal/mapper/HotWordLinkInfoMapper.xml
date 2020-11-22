@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sh.ideal.dao.HotWordLinkInfoDao">
+  <resultMap type="cn.sh.ideal.bean.HotWordLinkInfo" id="BaseResultMap">
+    <result property="klId" column="t_hot_word_id"  />
+    <result property="hotWordId" column="thw_name" />
+    <result property="infoId" column="thl_infoid" />
+    <result property="infoType" column="thl_infotype" />
+    <result property="infoName" column="thl_infoName" />
+  </resultMap>
+  <!-- select thw.t_hot_word_id,thw.thw_name,thw.thw_type_level2,thw_type,thw_sort1,thw_sort2 -->
+  <select id="queryHotWordLinkInfoListByMapCopy" resultMap="BaseResultMap" >
+	select thl.thl_infoid,thl.thl_infotype,
+		case when THL_INFOTYPE = '1' then (select kci.kl_content_title from kl_content_info kci where kci.kl_ID = THL_INFOID) 
+  			 when THL_INFOTYPE = '2' then (select kbi.kl_business_title  from kl_business_info kbi where kbi.kl_ID = THL_INFOID)
+		     when THL_INFOTYPE = '3' then (select kni.kl_news_title from kl_news_info kni where kni.kl_ID = THL_INFOID)
+		     end thl_infoName
+	  from t_hotword_linkinfo thl
+	 where thl.thl_del_flag = '0'
+	   and thl.thl_syn_state = '1'
+	   and thl.thl_infotype = '1'
+	   <if test='hotWordId != null and hotWordId != ""'>	
+	   and thl.thl_hotwordid = #{hotWordId}
+	   </if>
+	   <if test='hotWordSortId != null and hotWordSortId != ""'>
+	   and thl.thl_hotsortid = #{hotWordSortId}
+	   </if>
+	   and (exists
+	        (select 1
+	           from kl_content_info kci
+	          where kci.kl_id = thl.thl_infoid
+	            and thl.thl_infotype = '1'
+	            <if test='contentType != null and contentType == "0"'>
+	            and kci.kl_content_type = '0'
+	            </if>
+	            <if test='contentType != null and contentType == "1"'>
+	            and kci.kl_content_type = '1'
+	            </if>
+	            <if test='contentType != null and contentType == "2"'>
+	            and kci.kl_content_type in ('2','3','4','5')
+	            </if>
+	            and kci.kl_content_is_del != '1'
+	            and kci.kl_content_validitytime <![CDATA[>]]> sysdate
+	            and (kci.kl_content_publishtime <![CDATA[<]]> sysdate)) or exists
+	        (select 1
+	           from kl_business_info kbi
+	          where kbi.kl_id = thl.thl_infoid
+	            and thl.thl_infotype = '2'
+	            and kbi.is_del_flag != '1'
+	            and kbi.kl_business_offlinetime > sysdate
+	            and kbi.kl_business_onlinetime <![CDATA[<]]> sysdate) or exists
+	        (select 1
+	           from kl_news_info kni
+	          where kni.kl_id = thl.thl_infoid
+	            and thl.thl_infotype = '3'
+	            and kni.kl_news_isdel <![CDATA[<>]]> '1'
+	            and kni.kl_news_offlinetime <![CDATA[>]]> sysdate
+	            and kni.kl_news_onlinetime <![CDATA[<]]> sysdate))
+	
+	 order by thl.thl_hotsortid, thl.thl_order
+  </select>
+  
+  <select id="queryHotWordLinkInfoListByMap" resultMap="BaseResultMap" >
+  select thl_infoid,thl_infotype,thl_infoName from (
+  
+	select thl.thl_infoid,thl.thl_infotype,thl.thl_hotsortid, thl.thl_order,
+		case when THL_INFOTYPE = '1' then (select kci.kl_content_title from kl_content_info kci where kci.kl_ID = THL_INFOID) 
+  			 when THL_INFOTYPE = '2' then (select kbi.kl_business_title  from kl_business_info kbi where kbi.kl_ID = THL_INFOID)
+		     when THL_INFOTYPE = '3' then (select kni.kl_news_title from kl_news_info kni where kni.kl_ID = THL_INFOID)
+		     end thl_infoName
+	  from t_hotword_linkinfo thl
+	 where thl.thl_del_flag = '0'
+	   and thl.thl_syn_state = '1'
+	   and thl.thl_infotype = '1'
+	   <if test='hotWordId != null and hotWordId != ""'>	
+	   and thl.thl_hotwordid = #{hotWordId}
+	   </if>
+	   <if test='hotWordSortId != null and hotWordSortId != ""'>
+	   and thl.thl_hotsortid = #{hotWordSortId}
+	   </if>
+	   and (exists
+	        (select 1
+	           from kl_content_info kci
+	          where kci.kl_id = thl.thl_infoid
+	            and thl.thl_infotype = '1'
+	            <if test='contentType != null and contentType == "0"'>
+	            and kci.kl_content_type = '0'
+	            </if>
+	            <if test='contentType != null and contentType == "1"'>
+	            and kci.kl_content_type = '1'
+	            </if>
+	            <if test='contentType != null and contentType == "2"'>
+	            and kci.kl_content_type in ('2','3','4','5')
+	            </if>
+	            and kci.kl_content_is_del != '1'
+	  			and kci.kl_content_ispublic = '1'
+	            and kci.kl_content_validitytime <![CDATA[>]]> sysdate
+	            and (kci.kl_content_publishtime <![CDATA[<]]> sysdate)) or exists
+	        (select 1
+	           from kl_business_info kbi
+	          where kbi.kl_id = thl.thl_infoid
+	            and thl.thl_infotype = '2'
+	            and kbi.is_del_flag != '1'
+	            and kbi.kl_business_offlinetime > sysdate
+	            and kbi.kl_business_onlinetime <![CDATA[<]]> sysdate) or exists
+	        (select 1
+	           from kl_news_info kni
+	          where kni.kl_id = thl.thl_infoid
+	            and thl.thl_infotype = '3'
+	            and kni.kl_news_isdel <![CDATA[<>]]> '1'
+	            and kni.kl_news_offlinetime <![CDATA[>]]> sysdate
+	            and kni.kl_news_onlinetime <![CDATA[<]]> sysdate))
+	            
+	            
+		) 
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test='keyword != null and keyword != ""'>	
+		   		thl_infoName like '%'||#{keyword}||'%'
+		   </if>
+		</trim>
+	 order by thl_hotsortid, thl_order
+  </select>
+  
+</mapper>
+
+
+
+

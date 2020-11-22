@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sh.ideal.dao.ColumnDao">
+	<resultMap type="cn.sh.ideal.bean.ColumnInfo" id="BaseResultMap">
+    <result property="columnId" column="AUTO_ID"  />
+    <result property="columnTitle" column="COLUMN_TITLE" />
+    <result property="columnType" column="COLUMN_TYPE" />
+  </resultMap>
+  
+  <select id="getColumnByFocusId" resultMap="BaseResultMap" >
+  		 select AUTO_ID, COLUMN_TITLE_WEB COLUMN_TITLE, 
+				(case when COLUMN_TYPE = 'col_richtext' then '0' else '1' end) COLUMN_TYPE
+		   from FOCUS_COLUMN
+		  where FOCUS_ID = #{focusId}
+		    and column_is_del = '0'
+		    and COLUMN_TYPE not in ('col_foot', 'col_top')
+		  order by ordernum
+  </select>
+  
+  
+  <select id="getColumnByColumnId" resultMap="BaseResultMap" >
+  		select AUTO_ID, COLUMN_TITLE_WEB COLUMN_TITLE, NVL(COLUMN_TYPE,'1') COLUMN_TYPE
+		   from FOCUS_COLUMN
+		  where PARENT_ID = #{columnId}
+		    and column_is_del = '0'
+		    AND SYNC_STATE = '1'
+		  ORDER BY ORDERNUM
+  </select>
+
+
+
+  <resultMap type="cn.sh.ideal.bean.FocusColumnContent" id="focusColumnContentMap">
+    <result property="content" column="CONTENT" />
+    <result property="contentWeb" column="CONTENT_WEB" />
+  </resultMap>
+  <select id="getColumnRichTextInfo" resultMap="focusColumnContentMap">
+   	 select CONTENT,CONTENT_WEB
+	   from FOCUS_COLUMN_CONTENT 
+	  where FOCUS_COLUMN_ID = #{columnId}
+  </select>
+
+</mapper>
+
+
+
+

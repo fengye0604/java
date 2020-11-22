@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sh.ideal.dao.PolicyDao">
+  <resultMap type="cn.sh.ideal.bean.PolicyInfo" id="BaseResultMap">
+  	<result property="policyId" column="policyId"  />
+    <result property="policyTitle" column="info_id"  />
+	<result property="policySource" column="info_id"  />
+	<result property="policyEnforceTime" column="info_id"  />
+	<result property="policyYear" column="info_id"  />
+	<result property="policyMonth" column="info_id"  />
+  </resultMap>
+  
+  <select id="getLatestInfos" resultMap="BaseResultMap" >
+	select *
+	  from (select ttli.ttli_content_id policyId,
+	               kci.kl_content_title policyTitle,
+	               (select T.STRU_NAME from SYS_STRU T where T.AUTO_ID = kci.KL_CONTENT_SOURCES) as policySource,
+	               kci.enforce_time policyEnforceTime,
+	               to_char(ktc.enforce_time, 'yyyy') policyYear,
+	               to_char(ktc.enforce_time, 'MM') policyMonth
+	          from T_TIMELINE_LINK_INFO    ttli,
+	               kl_timeline_contentinfo ktc,
+	               kl_content_info         kci
+	         where ttli.ttli_timeline_id = ktc.auto_id(+)
+	           and ttli.ttli_content_id = kci.kl_id
+	           and ttli.ttli_syn_flag = '1'
+	           and ktc.status != '1'
+               and ktc.online_time <![CDATA[<]]> sysdate 
+               and kci.kl_content_is_del != '1'
+               and kci.kl_content_ispublic = '1'
+               and kci.kl_content_validitytime <![CDATA[>]]> sysdate
+               and (kci.kl_content_publishtime is null or kci.kl_content_publishtime <![CDATA[<]]>  sysdate)
+           order by policyYear desc, policyMonth desc, policyEnforceTime desc)
+	 where rownum <![CDATA[<]]> 4
+  </select>
+  
+  
+  <select id="getInfosByWhere" resultMap="BaseResultMap" >
+	 select ttli.ttli_content_id policyId,
+	        kci.kl_content_title policyTitle,
+	        (select T.STRU_NAME
+	           from SYS_STRU T
+	          where T.AUTO_ID = kci.KL_CONTENT_SOURCES) as policySource,
+	        kci.enforce_time policyEnforceTime,
+	        to_char(ktc.enforce_time, 'yyyy') policyYear,
+	        to_char(ktc.enforce_time, 'MM') policyMonth
+	   from T_TIMELINE_LINK_INFO    ttli,
+	        kl_timeline_contentinfo ktc,
+	        kl_content_info         kci
+	  where ttli.ttli_timeline_id = ktc.auto_id(+)
+	    and ttli.ttli_content_id = kci.kl_id
+	    and ttli.ttli_syn_flag = '1'
+	    and ktc.status != '1'
+	    and ktc.online_time <![CDATA[<]]> sysdate 
+	    and kci.kl_content_is_del != '1'
+	    and kci.kl_content_ispublic = '1'
+	    and kci.kl_content_validitytime <![CDATA[>]]> sysdate
+	    and (kci.kl_content_publishtime is null or kci.kl_content_publishtime <![CDATA[<]]>  sysdate)
+	    <trim prefix=" " suffix=" " >
+	    	<if test="year != null and year != ''">
+	           and to_char(ktc.enforce_time, 'yyyy') = #{year}
+	        </if>
+		    <if test="month != null and month != ''">
+	           and to_char(ktc.enforce_time, 'MM') = #{month}
+	        </if>
+	        <if test="keyword != null and keyword != ''">
+	           and kci.kl_content_title like '%'||#{keyword}||'%'
+	        </if>
+	    </trim>
+	  order by policyYear desc, policyMonth desc, policyEnforceTime desc
+  </select>  
+</mapper>
+
+
+
+

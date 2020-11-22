@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sh.ideal.dao.FocusDao">
+  <resultMap type="cn.sh.ideal.bean.FocusInfo" id="BaseResultMap">
+    <result property="focusId" column="AUTO_ID"  />
+    <result property="focusTitle" column="FOCUS_TITLE" />
+  </resultMap>
+  
+  <select id="queryAll" resultMap="BaseResultMap" >
+  		<![CDATA[
+		select k.AUTO_ID, k.FOCUS_TITLE
+		  from kl_content_focus k
+		 where 1 = 1
+		   and k.focus_status = '5'
+		   and k.sync_state = '1'
+		   and k.merge_flag = '0'
+		   and k.focus_online_time < sysdate
+		   and k.focus_offline_time > sysdate
+		 order by FOCUS_ORDERNO asc,
+		          FOCUS_UPDATE_TIME desc,
+		          to_number(auto_id) desc
+		]]>
+  </select>
+  
+  
+  
+  
+  <resultMap type="cn.sh.ideal.bean.FocusContentInfo" id="focusContentInfoResultMap">
+    <result property="infoId" column="info_id"  />
+    <result property="infoType" column="info_type" />
+    <result property="infoTitle" column="info_title_new" />
+  </resultMap>
+  <!-- 根据热点专题id查询热点专题关联的信息 -->
+  <select id="getInfos" resultMap="focusContentInfoResultMap" parameterType="map">
+  	select kci.info_title_new,kci.info_id ,kci.info_type
+	  from focus_column_info kci
+	 where kci.column_id in
+	       (select fc.auto_id from focus_column fc where fc.focus_id = #{focusId})
+	   and kci.status = 'n' 
+	   and kci.info_type = '1' 
+	   and kci.sync_state = '1'
+	   and (exists
+		        (select 1
+		           from kl_content_info kcci
+		          where kcci.kl_id = kci.info_id
+		            and kci.info_type = '1'
+		            and kcci.kl_content_is_del != '1'
+	  				and kci.kl_content_ispublic = '1'
+		            and kcci.kl_content_validitytime <![CDATA[>]]> sysdate
+		            and (kcci.kl_content_publishtime is null or
+		                kcci.kl_content_publishtime <![CDATA[<]]>  sysdate)) or exists
+		        (select 1
+		           from kl_business_info kbi
+		          where kbi.kl_id = kci.info_id
+		            and kci.info_type = '2'
+		            and kbi.kl_business_offlinetime <![CDATA[>]]> sysdate
+		            and kbi.kl_business_onlinetime <![CDATA[<]]> sysdate) or exists
+		        (select 1
+		           from kl_news_info kni
+		          where kni.kl_id = kci.info_id
+		            and kci.info_type = '3'
+		            and kni.kl_news_isdel != '1'
+		            and kni.kl_news_offlinetime <![CDATA[>]]> sysdate
+		            and kni.kl_news_onlinetime <![CDATA[<]]> sysdate)) 
+	   <if test="keyword != null and keyword != ''">
+	   and (kci.info_title_new like '%'||#{keyword}||'%' or kci.info_title_old like '%'||#{keyword}||'%')
+	   </if>
+  </select>
+  
+  <!-- 根据栏目id查询热点专题关联的信息 -->
+  <select id="getColumnInfos" resultMap="focusContentInfoResultMap" parameterType="map">
+		select c.info_id , c.info_title_new, c.info_type
+		  from FOCUS_COLUMN_INFO c, FOCUS_COLUMN b
+		 where 1 = 1
+		   and c.column_id = b.auto_id(+)
+		   and COLUMN_ID in (select a.auto_id
+		                       from focus_column a
+		                      where a.COLUMN_IS_DEL = '0'
+		                        and a.sync_state = '1'
+		                      start with a.AUTO_ID = #{columnId}
+		                     connect by prior a.AUTO_ID = a.parent_id)
+		   and (exists
+		        (select 1
+		           from kl_content_info kci
+		          where kci.kl_id = c.info_id
+		            and c.info_type = '1'
+		            <if test='contentType != null and contentType == "0"'>
+		            and kci.kl_content_type = '0'
+		            </if>
+		            <if test='contentType != null and contentType == "1"'>
+		            and kci.kl_content_type = '1'
+		            </if>
+		            <if test='contentType != null and contentType == "2"'>
+		            and kci.kl_content_type in ('2','3','4','5')
+		            </if>
+		            and kci.kl_content_is_del != '1'
+	  				and kci.kl_content_ispublic = '1'
+		            and kci.kl_content_validitytime <![CDATA[>]]> sysdate
+		            and (kci.kl_content_publishtime is null or
+		                kci.kl_content_publishtime <![CDATA[<]]>  sysdate)) or exists
+		        (select 1
+		           from kl_business_info kbi
+		          where kbi.kl_id = c.info_id
+		            and c.info_type = '2'
+		            and kbi.kl_business_offlinetime <![CDATA[>]]> sysdate
+		            and kbi.kl_business_onlinetime <![CDATA[<]]> sysdate) or exists
+		        (select 1
+		           from kl_news_info kni
+		          where kni.kl_id = c.info_id
+		            and c.info_type = '3'
+		            and kni.kl_news_isdel <![CDATA[<>]]> '1'
+		            and kni.kl_news_offlinetime <![CDATA[>]]> sysdate
+		            and kni.kl_news_onlinetime <![CDATA[<]]> sysdate))
+		   and c.STATUS = 'n'
+		   AND c.SYNC_STATE = '1'
+		   <if test="keyword != null and keyword != ''">
+		   and (c.info_title_new like '%'||#{keyword}||'%' or c.info_title_old like '%'||#{keyword}||'%')
+		   </if>
+		 ORDER BY to_number(c.SHOW_INDEX) asc, to_number(c.AUTO_ID) asc
+   </select>
+</mapper>
+
+
+
+

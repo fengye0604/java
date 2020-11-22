@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.sh.ideal.dao.EvaluateDao">
+  	<!-- 新增热词 -->
+	<insert id="addHotWordEvaluate" parameterType="cn.sh.ideal.entity.HotWordEvaluate">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_HOTWORD_EVALUATE.nextval from dual  
+    	</selectKey>
+		insert into T_HOTWORD_EVALUATE(
+						T_HOTWORD_EVALUATE_ID,
+						<if test="hotWordId!= null and hotWordId != ''">THE_HOTWORDID,</if>
+						<if test="typeLevel1!= null and typeLevel1 != ''">THE_HOTWORD_TYPELEVEL1,</if>
+						<if test="typeLevel2!= null and typeLevel2 != ''">THE_HOTWORD_TYPELEVEL2,</if>
+						<if test="optionId!= null and optionId != ''">THE_LINK_SORT_ID,</if>
+						<if test="optionType!= null and optionType != ''">THE_LINK_SORT_TYPE,</if>
+						<if test="infoId!= null and infoId != ''">THE_INFO_ID,</if>
+						<if test="infoType!= null and infoType != ''">THE_INFO_TYPE,</if>
+						<if test="qsInfoId!= null and qsInfoId != ''">THE_QUESTIONANSWER_ID,</if>
+						<if test="evaluateType!= null and evaluateType != ''">THE_EVALUATE_TYPE,</if>
+						<if test="evaluateLevel!= null and evaluateLevel != ''">THE_EVALUATE_LEVEL,</if>
+						<if test="evaluateCreater!= null and evaluateCreater != ''">THE_EVALUATE_CREATER,</if>
+						<if test="platform!= null and platform != ''">THE_PLATFORM,</if>
+						<if test="evaluate!= null and evaluate != ''">THE_EVALUATE,</if>
+						THE_EVALUATE_TIME
+				)
+					
+				values (#{klId},
+						<if test="hotWordId != null and hotWordId != ''">#{hotWordId,jdbcType=VARCHAR},</if>
+						<if test="typeLevel1 != null and typeLevel1 != ''">#{typeLevel1,jdbcType=VARCHAR},</if>
+						<if test="typeLevel2 != null and typeLevel2 != ''">#{typeLevel2,jdbcType=VARCHAR},</if>
+						<if test="optionId != null and optionId != ''">#{optionId,jdbcType=VARCHAR},</if>
+						<if test="optionType != null and optionType != ''">#{optionType,jdbcType=VARCHAR},</if>
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="qsInfoId != null and qsInfoId != ''">#{qsInfoId,jdbcType=VARCHAR},</if>
+						<if test="evaluateType != null and evaluateType != ''">#{evaluateType,jdbcType=VARCHAR},</if>
+						<if test="evaluateLevel != null and evaluateLevel != ''">#{evaluateLevel,jdbcType=VARCHAR},</if>
+						<if test="evaluateCreater != null and evaluateCreater != ''">#{evaluateCreater,jdbcType=VARCHAR},</if>
+						<if test="platform != null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						<if test="evaluate != null and evaluate != ''">#{evaluate,jdbcType=VARCHAR},</if>
+						sysdate
+						)
+	</insert>
+
+
+	<!-- 新增新政新规 -->
+	<insert id="addPolicyEvaluate" parameterType="cn.sh.ideal.entity.PolicyEvaluate">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_POLICY_EVALUATE.nextval from dual  
+    	</selectKey>
+		insert into T_POLICY_EVALUATE(
+						T_POLICY_EVALUATE_ID,
+						<if test="infoId!= null and infoId != ''">TPE_INFO_ID,</if>
+						<if test="infoType!= null and infoType != ''">TPE_INFO_TYPE,</if>
+						<if test="pageLevel!= null and pageLevel != ''">TPE_PAGELEVEL,</if>
+						<if test="evaluateCreater!= null and evaluateCreater != ''">TPE_EVALUATE_CREATER,</if>
+						<if test="evaluate!= null and evaluate != ''">TPE_EVALUATE,</if>
+						<if test="platform!= null and platform != ''">TPE_PLATFORM,</if>
+						TPE_EVALUATE_TIME
+									)
+				values (
+						#{klId},
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="pageLevel != null and pageLevel != ''">#{pageLevel,jdbcType=VARCHAR},</if>
+						<if test="evaluateCreater != null and evaluateCreater != ''">#{evaluateCreater,jdbcType=VARCHAR},</if>
+						<if test="evaluate != null and evaluate != ''">#{evaluate,jdbcType=VARCHAR},</if>
+						<if test="platform != null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						sysdate
+						)
+	</insert>
+
+	<!-- 新增热点专题 -->
+	<insert id="addFocusEvaluate" parameterType="cn.sh.ideal.entity.FocusEvaluate">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_FOCUS_EVALUATE.nextval from dual  
+    	</selectKey>
+		insert into T_FOCUS_EVALUATE(
+						T_FOCUS_EVALUATE_ID,
+						<if test="focusId!= null and focusId != ''">TFE_FOCUS_ID,</if>
+						<if test="sortId!= null and sortId != ''">TFE_SORT_ID,</if>
+						<if test="sortType!= null and sortType != ''">TFE_SORT_TYPE,</if>
+						<if test="infoId!= null and infoId != ''">TFE_INFO_ID,</if>
+						<if test="infoType!= null and infoType != ''">TFE_INFO_TYPE,</if>
+						<if test="evaluateCreater!= null and evaluateCreater != ''">TFE_EVALUATE_CREATER,</if>
+						<if test="platform!= null and platform != ''">TFE_PLATFORM,</if>
+						<if test="evaluate!= null and evaluate != ''">TFE_EVALUATE,</if>
+						TFE_EVALUATE_TIME
+									)
+				values (
+						#{klId},
+						<if test="focusId != null and focusId != ''">#{focusId,jdbcType=VARCHAR},</if>
+						<if test="sortId != null and sortId != ''">#{sortId,jdbcType=VARCHAR},</if>
+						<if test="sortType != null and sortType != ''">#{sortType,jdbcType=VARCHAR},</if>
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="evaluateCreater != null and evaluateCreater != ''">#{evaluateCreater,jdbcType=VARCHAR},</if>
+						<if test="platform != null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						<if test="evaluate != null and evaluate != ''">#{evaluate,jdbcType=VARCHAR},</if>
+						sysdate
+					)
+		</insert>
+
+	<!-- 新增检索 -->
+	<insert id="addSearchEvaluate" parameterType="cn.sh.ideal.entity.SearchEvaluate">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="klId">
+			select SEQ_T_SEARCH_EVALUATE.nextval from dual  
+    	</selectKey>
+		insert into T_SEARCH_EVALUATE(
+						T_SEARCH_EVALUATE_ID,
+						<if test="infoId!= null and infoId != ''">TSE_INFO_ID,</if>
+						<if test="infoType!= null and infoType != ''">TSE_INFO_TYPE,</if>
+						<if test="qsInfoId!= null and qsInfoId != ''">TSE_QUESTIONANSWER_ID,</if>
+						<if test="evaluateType!= null and evaluateType != ''">TSE_EVALUATE_TYPE,</if>
+						<if test="evaluateCreater!= null and evaluateCreater != ''">TSE_EVALUATE_CREATER,</if>
+						<if test="platform!= null and platform != ''">TSE_PLATFORM,</if>
+						<if test="evaluate!= null and evaluate != ''">TSE_EVALUATE,</if>
+						TSE_EVALUATE_TIME
+									)
+				values (
+						#{klId},
+						<if test="infoId != null and infoId != ''">#{infoId,jdbcType=VARCHAR},</if>
+						<if test="infoType != null and infoType != ''">#{infoType,jdbcType=VARCHAR},</if>
+						<if test="qsInfoId != null and qsInfoId != ''">#{qsInfoId,jdbcType=VARCHAR},</if>
+						<if test="evaluateType != null and evaluateType != ''">#{evaluateType,jdbcType=VARCHAR},</if>
+						<if test="evaluateCreater != null and evaluateCreater != ''">#{evaluateCreater,jdbcType=VARCHAR},</if>
+						<if test="platform != null and platform != ''">#{platform,jdbcType=VARCHAR},</if>
+						<if test="evaluate != null and evaluate != ''">#{evaluate,jdbcType=VARCHAR},</if>
+						sysdate
+					)
+		</insert>
+</mapper>
+
+
+
+
