@@ -1,0 +1,10 @@
+server:
+  port: 8083
+logging:
+  level:
+    root: info
+    com.yang.elasticsearchdemo.controller: debug
+  pattern:
+    console: "%d - %msg%n"
+  file:
+    path: d:/logs/elasticsearch.log
